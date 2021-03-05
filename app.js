@@ -11,7 +11,8 @@ const logger = require('morgan');//morgan的用途就是记录http通信时的�
 // 路由信息（接口地址），存放在routes的根目录
 let index = require('./routes/index');  //测试
 let visitor = require('./routes/visitor');  //新增访客
-let options = require('./routes/options');  //一些options在这里
+let options = require('./routes/options');  //一些options在这里   
+let inquirySymptem = require('./routes/inquirySymptem');  //诊断
 
 
 
@@ -53,6 +54,8 @@ app.use(express.static(__dirname));  // 访问静态资源
 app.use('/', index);
 app.use('/visitor', visitor);
 app.use('/options', options);
+app.use('/inquirySymptem', inquirySymptem);
+
 
 
 

@@ -1,4 +1,4 @@
-//访客增删改查
+//诊断详情
 const express = require('express');
 const router = express.Router();
 const URL = require('url');
@@ -22,26 +22,30 @@ let returnData = {
   data: []
 }
 
-//增加人员
+//增加诊断详情
 router.post('/add', function (req, res, next) {
   console.log(req.body)
   let obj = {
     id: uuid.v1(),
-    name: req.body.name,  
-    sex: req.body.sex,
+    vid:req.body.vid,  
+    title: req.body.title,  
     consultType: req.body.consultType,
-    visitorSource: req.body.visitorSource,
-    bornDate: req.body.bornDate,
-    visitDate: req.body.visitDate,
-    province: req.body.province,
-    city: req.body.city,
+    price: req.body.price,
+    inquiryDate: req.body.inquiryDate,
+    desc: req.body.desc,
+    photoPath: req.body.photoPath,
+    result: req.body.result,
+    solution: req.body.solution,
+    feedback: req.body.feedback ? req.body.feedback : '',
+    remark: req.body.remark ? req.body.remark : '',
+
   }
   pool.getConnection((err, connection) => {
     if (err) {
       console.log('与mysql数据库建立连接失败');
       console.error(err)
     } else {
-      connection.query('INSERT INTO visitor SET ?', obj, function (err, result) {
+      connection.query('INSERT INTO inquiry_detail SET ?', obj, function (err, result) {
         if (err) {
           console.log('[SELECT ERROR] - ', err.message);
           returnData.code = 2
@@ -67,14 +71,15 @@ router.post('/add', function (req, res, next) {
   })
 });
 
-//查询所有人员
+//查询诊断详情
 router.get('/query', function (req, res, next) {
+  console.log(req.query.id)
   pool.getConnection((err, connection) => {
     if (err) {
       console.log('与mysql数据库建立连接失败');
       console.error(err)
     } else {
-      connection.query('SELECT * FROM visitor', function (err, result) {
+      connection.query(`SELECT * FROM inquiry_detail WHERE vid='${req.query.id}'`, function (err, result) {
         if (err) {
           console.log('[SELECT ERROR] - ', err.message);
           returnData.code = 2
