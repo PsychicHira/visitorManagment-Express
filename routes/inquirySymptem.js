@@ -105,6 +105,41 @@ router.get('/query', function (req, res, next) {
   })
 });
 
+//删除诊断详情
+router.post('/delete', function (req, res, next) {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.log('与mysql数据库建立连接失败');
+      console.error(err)
+    } else {
+      connection.query(`DELETE FROM inquiry_detail WHERE id='${req.body.id}';`, function (err, result) {
+        console.log(result.affectedRows)
+        if (err) {
+          console.log('[SELECT ERROR] - ', err.message);
+          returnData.code = 2
+          returnData.message = err.message
+          returnData.data = result
+          res.send(returnData);
+          return;
+        }
+        if (result.affectedRows == 0) {
+          returnData.code = 0
+          returnData.message = "数据删除失败"
+          returnData.data = result
+          res.send(returnData);
+        } else {
+          // connection.query('ALTER TABLE  `consult_type` DROP `id`;ALTER TABLE `consult_type` ADD `id` int(3) PRIMARY KEY NOT NULL AUTO_INCREMENT FIRST;')
+          returnData.code = 1
+          returnData.message = "数据删除成功"
+          returnData.data = result
+          res.send(returnData);
+        }
+        connection.release()
+      });
+    }
+  })
+});
+
 
 
 

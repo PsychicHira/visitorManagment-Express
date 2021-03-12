@@ -27,7 +27,7 @@ router.post('/add', function (req, res, next) {
   console.log(req.body)
   let obj = {
     id: uuid.v1(),
-    name: req.body.name,  
+    name: req.body.name,
     sex: req.body.sex,
     visitorSource: req.body.visitorSource,
     bornDate: req.body.bornDate,
@@ -73,7 +73,7 @@ router.get('/query', function (req, res, next) {
       console.log('与mysql数据库建立连接失败');
       console.error(err)
     } else {
-      connection.query('SELECT * FROM visitor', function (err, result) {
+      connection.query('SELECT * FROM visitor ORDER BY visitDate DESC', function (err, result) {
         if (err) {
           console.log('[SELECT ERROR] - ', err.message);
           returnData.code = 2
@@ -98,7 +98,6 @@ router.get('/query', function (req, res, next) {
     }
   })
 });
-
 
 //删除所选人员
 router.post('/delete', function (req, res, next) {
@@ -143,17 +142,15 @@ router.post('/updata', function (req, res, next) {
       console.error(err)
     } else {
       //UPDATE department SET departmentName='营业机构', number='018' WHERE departmentName='修改' AND number='019'
-      connection.query(`UPDATE hw_users 
-      SET name='${req.body.presentForm.name}',
-          sex='${req.body.presentForm.sex}',
-          phoneNumber='${req.body.presentForm.phoneNumber}',
-          department='${req.body.presentForm.department}',
-          post='${req.body.presentForm.post}',
-          identification='${req.body.presentForm.identification}',
-          loginName='${req.body.presentForm.loginName}',
-          password='${req.body.presentForm.password}',
-          employeeNumber='${req.body.presentForm.employeeNumber}'
-      WHERE name='${req.body.updataForm.name}' AND sex='${req.body.updataForm.sex}'`, function (err, result) {
+      connection.query(`UPDATE visitor 
+      SET name='${req.body.name}',
+          sex='${req.body.sex}',
+          visitorSource='${req.body.visitorSource}',
+          bornDate='${req.body.bornDate}',
+          visitDate='${req.body.visitDate}',
+          province='${req.body.province}',
+          city='${req.body.city}'
+      WHERE id='${req.body.id}'`, function (err, result) {
         if (err) {
           console.log('[SELECT ERROR] - ', err.message);
           res.send(err.message);
